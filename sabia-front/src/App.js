@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import logo from './logo.svg';
 import './App.css';
 
@@ -19,7 +20,28 @@ function App() {
         </a>
       </header>
     </div>
+=======
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/home';
+import Aluno from './pages/aluno';
+import Professor from './pages/professor';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/aluno" element={<Aluno />} />
+        <Route path="/professor" element={<Professor />} />
+      </Routes>
+    </Router>
+>>>>>>> 6441abb9f31e441977c1a5676cd28913cbf3db48
   );
 }
 
 export default App;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6441abb9f31e441977c1a5676cd28913cbf3db48
