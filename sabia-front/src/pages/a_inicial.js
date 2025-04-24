@@ -1,6 +1,6 @@
 import Button from '../components/botao.js'; 
 
-export default function Home() {
+export default function aInicial() {
     return (
         <div>
             <Button text="aluno" to="/a_inicial"/>
@@ -10,4 +10,3 @@ export default function Home() {
 
     );
 }
-

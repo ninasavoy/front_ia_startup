@@ -1,0 +1,33 @@
+.activity-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    margin-bottom: 2rem;
+  }
+  
+  .activity-input {
+    padding: 8px;
+    font-size: 1rem;
+  }
+  
+  .activity-textarea {
+    padding: 8px;
+    font-size: 1rem;
+    min-height: 80px;
+  }
+  
+  .activity-button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  

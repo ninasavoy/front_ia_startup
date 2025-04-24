@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Button.css';
+import './css/botao.css';
 
 function Button({ text, to }) {
   const navigate = useNavigate();
