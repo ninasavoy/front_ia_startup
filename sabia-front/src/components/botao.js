@@ -1,12 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './css/botao.css';
+import '../components/css/botao.css';
 
-function Button({ text, to }) {
+function Button({ text, to, onClick }) {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (to) {
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (onClick) {
+      onClick();
+    } else if (to) {
       navigate(to);
     }
   };

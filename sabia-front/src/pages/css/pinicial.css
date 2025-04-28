@@ -1,0 +1,98 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    padding: 50px 20px;
+  }
+  
+  .page-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0d47a1;
+    margin-bottom: 40px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeSlideIn 1s forwards;
+  }
+  
+  .agentes-lista {
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .tabela-agentes {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  
+  .tabela-agentes th, .tabela-agentes td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #0d47a1;
+    font-size: 18px;
+  }
+  
+  .tabela-agentes th {
+    background-color: #66bb6a;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .tabela-agentes tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .button-container {
+    margin-top: 20px;
+  }
+  
+  /* Animações */
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .acao-botao {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 0 5px;
+    transition: transform 0.2s, background-color 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+  
+  /* Botão excluir novo */
+  .acao-botao.excluir {
+    background-color: #e53935;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .acao-botao.excluir:hover {
+    background-color: #c62828;
+    transform: scale(1.05);
+  }
+  
+  

@@ -1,0 +1,194 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    /* min-height: auto; */
+    background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    overflow-x: hidden;
+    overflow-y: hidden; /* <- adiciona isso para evitar scroll vertical desnecessário */
+  }
+  
+  
+  .page-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0d47a1;
+    margin-bottom: 30px;
+  }
+  
+  .agentes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .agente-button {
+    background-color: #66bb6a;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .agente-button:hover {
+    background-color: #388e3c;
+    transform: scale(1.05);
+  }
+  
+  .chat-container {
+    width: 100%;
+    max-width: 700px; /* Aumentei a largura */
+    margin-top: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    height: 500px; /* Aumentei a altura */
+    overflow-y: auto; /* Scroll só dentro da telinha */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-balao {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    word-wrap: break-word;
+  }
+  
+  .chat-balao.usuario {
+    background-color: #66bb6a;
+    color: white;
+    align-self: flex-end;
+  }
+  
+  .chat-balao.bot {
+    background-color: #e0e0e0;
+    color: black;
+    align-self: flex-start;
+  }
+  
+  .chat-form {
+    display: flex;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .chat-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+    font-size: 16px;
+  }
+  
+  .chat-form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #66bb6a;
+    color: white;
+    font-size: 16px;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .chat-form button:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Animação fundo */
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .voltar-button {
+    margin-top: 20px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .voltar-button:hover {
+    background-color: #c62828;
+    transform: scale(1.05);
+  }
+  
+  /* Animação de digitando */
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 10px 15px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    width: fit-content;
+  }
+  
+  .typing-indicator span {
+    width: 10px;
+    height: 10px;
+    background-color: #666;
+    border-radius: 50%;
+    display: inline-block;
+    animation: typingFade 1.5s infinite ease-in-out;
+  }
+  
+  .typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  /* Nova animação */
+  @keyframes typingFade {
+    0%, 80%, 100% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-8px);
+    }
+  }
+
+/* Balão base */
+.chat-balao {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    word-wrap: break-word;
+    opacity: 0; /* começa invisível */
+    transform: translateY(10px); /* começa um pouco para baixo */
+    animation: fadeInUp 0.5s forwards;
+  }
+  
+  /* Fade para cima */
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

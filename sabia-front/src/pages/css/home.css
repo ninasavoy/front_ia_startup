@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Fundo animado */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
+  background-size: 400% 400%;
+  animation: gradientMove 15s ease infinite;
+}
+
+/* Título */
+.page-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 40px;
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeSlideIn 1s forwards;
+}
+
+/* Botões container */
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Fundo animado keyframes */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fade do título */
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

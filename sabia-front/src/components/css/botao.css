@@ -1,14 +1,39 @@
 .my-button {
-    background-color: #0070f3;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #66bb6a;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 1s forwards;
+}
+
+.my-button:hover {
+  background-color: #388e3c;
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(56, 142, 60, 0.6);
+}
+
+/* Animação específica do botão */
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .my-button:hover {
-    background-color: #0059c1;
-  }
-  
+}
+
+/* Delay de animação para os botões */
+.my-button:nth-child(1) {
+  animation-delay: 1.2s;
+}
+
+.my-button:nth-child(2) {
+  animation-delay: 1.4s;
+}
