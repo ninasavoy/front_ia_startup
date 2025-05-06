@@ -5,6 +5,7 @@ import CriarAgenteModal from '../components/criarAgenteModal';
 import ModalDeletarAgente from '../components/modalDeletarAgente';
 import ModalEditarAgente from '../components/modalEditarAgente';
 import { listarAgentes } from '../services/api';
+import { deletarAgente as apiDeletarAgente } from '../services/api'; // Certifique que tá importando certinho
 import './css/pinicial.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -34,11 +35,16 @@ export default function PInicial() {
     setModalEditarAberto(true);
   };
 
-  const deletarAgente = () => {
-    // Aqui você faria a chamada API de DELETE
-    alert(`Agente ${agenteSelecionado} deletado!`);
-    setModalDeletarAberto(false);
-    // Depois chama carregarAgentes() de novo pra atualizar a lista
+  const deletarAgente = async () => {
+    try {
+      await apiDeletarAgente(agenteSelecionado); // chama API passando o nome do agente
+      alert(`Agente ${agenteSelecionado} deletado com sucesso!`);
+      setModalDeletarAberto(false); // fecha o modal de confirmação
+      carregarAgentes(); // atualiza a lista dos agentes
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao deletar agente.');
+    }
   };
 
   const editarAgente = (novoNome) => {
