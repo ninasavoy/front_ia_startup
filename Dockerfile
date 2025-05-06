@@ -3,10 +3,12 @@ FROM node:20-alpine as builder
 
 WORKDIR /sabia-front
 
-COPY package.json package-lock.json ./
+COPY /sabia-fornt/package.json /sabia-front/package-lock.json ./
+
 RUN npm install
 
 COPY . .
+
 RUN npm run build
 
 # Fase 2: Servir com Nginx
