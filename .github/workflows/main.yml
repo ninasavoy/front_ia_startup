@@ -38,5 +38,5 @@ jobs:
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/sabia-front:latest
           docker stop sabia-front || true
           docker rm sabia-front || true
-          docker run -d --name sabia-front -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/sabia-front:latest
+          docker run -d --name sabia-front --network=sabia-network -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/sabia-front:latest
         EOF
