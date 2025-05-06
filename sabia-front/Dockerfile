@@ -1,13 +1,13 @@
 # Fase 1: Build do React
 FROM node:20-alpine as builder
 
-WORKDIR /sabia-front
+WORKDIR /app
 
-COPY package*.json  ./
+COPY sabia-front/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY sabia-front/. .
 
 RUN npm run build
 
