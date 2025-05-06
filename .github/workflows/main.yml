@@ -21,7 +21,7 @@ jobs:
 
     - name: Build da imagem Docker
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/sabia-front:latest .
+        docker build -f sabia-front/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/sabia-front:latest .
 
     - name: Push da imagem para DockerHub
       run: |
