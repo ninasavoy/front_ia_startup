@@ -3,7 +3,7 @@ FROM node:20-alpine as builder
 
 WORKDIR /sabia-front
 
-COPY /sabia-fornt/package.json /sabia-front/package-lock.json ./
+COPY package*.json  ./
 
 RUN npm install
 
