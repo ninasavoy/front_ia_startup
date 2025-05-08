@@ -72,13 +72,13 @@ export default function AInicial() {
       <div className="page-container">
         <h1 className="page-title">Escolha um Agente</h1>
         <div className="agentes-lista">
-          {agentes.map((nome, index) => (
+          {agentes.map((agente, index) => (
             <button
               key={index}
               className="agente-button"
-              onClick={() => setAgenteSelecionado(nome)}
+              onClick={() => setAgenteSelecionado(agente.agent_id)}
             >
-              {nome}
+              {agente.agent_id}
             </button>
           ))}
         </div>

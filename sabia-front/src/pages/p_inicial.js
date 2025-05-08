@@ -68,9 +68,9 @@ export default function PInicial() {
               </tr>
             </thead>
             <tbody>
-              {agentes.map((nome, index) => (
+              {agentes.map((agente, index) => (
                 <tr key={index}>
-                  <td>{nome}</td>
+                  <td>{agente.agent_id}</td>
                   <td>
                     {/* <button className="acao-botao editar" onClick={() => abrirModalEditar(nome)}>✏️</button> */}
                     <button className="acao-botao excluir" onClick={() => abrirModalDeletar(nome)}>🗑️</button>
