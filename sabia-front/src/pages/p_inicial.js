@@ -73,7 +73,7 @@ export default function PInicial() {
                   <td>{agente.agent_id}</td>
                   <td>
                     {/* <button className="acao-botao editar" onClick={() => abrirModalEditar(nome)}>✏️</button> */}
-                    <button className="acao-botao excluir" onClick={() => abrirModalDeletar(nome)}>🗑️</button>
+                    <button className="acao-botao excluir" onClick={() => abrirModalDeletar(agente.agent_id)}>🗑️</button>
                   </td>
                 </tr>
               ))}
