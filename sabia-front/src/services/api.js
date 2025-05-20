@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080'; // atualiza se precisar
+const API_BASE_URL = 'http://54.197.170.229:8080'; // atualiza se precisar
 
 export const listarAgentes = async () => {
   const response = await fetch(`${API_BASE_URL}/agentes`);
