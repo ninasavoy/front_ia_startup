@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import Aluno from './pages/a_inicial';
 import Professor from './pages/p_inicial';
+import CriarAtividade from './pages/criar_atividade_agente';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/a_inicial" element={<Aluno />} />
         <Route path="/p_inicial" element={<Professor />} />
+        <Route path="/tarefas/:agentId" element={<CriarAtividade />} />
       </Routes>
     </Router>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';              
 import Button from '../components/botao.js';
 import AgenteCard from '../components/agenteCard';
 import CriarAgenteModal from '../components/criarAgenteModal';
@@ -56,24 +57,36 @@ export default function PInicial() {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">Minhas Atividades</h1>
+      <h1 className="page-title">Aulas</h1>
 
       <div className="agentes-lista">
         {Array.isArray(agentes) && agentes.length > 0 ? (
           <table className="tabela-agentes">
             <thead>
               <tr>
-                <th>Nome do Agente</th>
+                <th>Agentes</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody>
               {agentes.map((agente, index) => (
                 <tr key={index}>
-                  <td>{agente.agent_id}</td>
+                  {/* 2) usa Link para navegar */}
                   <td>
-                    {/* <button className="acao-botao editar" onClick={() => abrirModalEditar(nome)}>✏️</button> */}
-                    <button className="acao-botao excluir" onClick={() => abrirModalDeletar(agente.agent_id)}>🗑️</button>
+                    <Link
+                      to={`/tarefas/${agente.agent_id}`}
+                      className="link-agente"
+                    >
+                      {agente.agent_id}
+                    </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="acao-botao excluir"
+                      onClick={() => abrirModalDeletar(agente.agent_id)}
+                    >
+                      🗑️
+                    </button>
                   </td>
                 </tr>
               ))}

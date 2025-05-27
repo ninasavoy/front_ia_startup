@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    background: linear-gradient(-45deg, #e0f7fa, #b2ebf2, #80deea, #4dd0e1);
+    background: #E1ECF7;
     background-size: 400% 400%;
     animation: gradientMove 15s ease infinite;
     padding: 50px 20px;
@@ -38,7 +38,7 @@
   
   .tabela-agentes th, .tabela-agentes td {
     padding: 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
     color: #0d47a1;
     font-size: 18px;
@@ -95,4 +95,16 @@
     transform: scale(1.05);
   }
   
-  
+  /* deixa o link azul e com hover */
+.link-agente {
+  color: #007bff;
+  text-decoration: none;
+}
+.link-agente:hover {
+  text-decoration: underline;
+}
+
+/* opcional: cursor pointer */
+.link-agente {
+  cursor: pointer;
+}
