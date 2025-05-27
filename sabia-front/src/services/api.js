@@ -36,14 +36,18 @@ export const deletarAgente = async (nomeAgente) => {
   return response.json();
 };
 
-export const editarAgente = async (nomeAntigo, nomeNovo) => {
-  const response = await fetch(`${API_BASE_URL}/agentes/${encodeURIComponent(nomeAntigo)}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ novo_nome: nomeNovo }),
-  });
+// Apenas pdf, sem novo_nome
+export const editarAgente = async (nomeAntigo, pdfFile) => {
+  const formData = new FormData();
+  formData.append('pdf', pdfFile);
+
+  const response = await fetch(
+    `${API_BASE_URL}/agentes/${encodeURIComponent(nomeAntigo)}`,
+    {
+      method: 'PUT',
+      body: formData
+    }
+  );
 
   if (!response.ok) {
     throw new Error('Erro ao editar agente');
@@ -51,24 +55,22 @@ export const editarAgente = async (nomeAntigo, nomeNovo) => {
   return response.json();
 };
 
-export const perguntarAgente = async (nomeAgente, pergunta) => {
-    const response = await fetch(`${API_BASE_URL}/perguntar`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        agente: nomeAgente,
-        pergunta: pergunta,
-      }),
-    });
-  
-    if (!response.ok) {
-      throw new Error('Erro ao perguntar para agente');
-    }
-  
-    return response.json();
-  };
+/**
+ * Pergunta ao “professor” baseado na tarefa selecionada
+ * @param {string} tarefaId
+ * @param {string} pergunta
+ */
+export const perguntarTarefa = async (tarefaId, pergunta) => {
+  const response = await fetch(`${API_BASE_URL}/perguntar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pergunta, tarefa: tarefaId }),
+  });
+  if (!response.ok) {
+    throw new Error('Erro ao perguntar para tarefa');
+  }
+  return response.json();
+};
   
   export const getAgenteDetalhes = async (agentId) => {
 

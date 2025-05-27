@@ -1,29 +1,41 @@
-import React, { useState } from 'react';
-import '../components/css/modal.css';
+import React, { useState, useEffect } from 'react';
 
 export default function ModalEditarAgente({ isOpen, onClose, onConfirm, agenteNome }) {
-  const [novoNome, setNovoNome] = useState(agenteNome);
+  const [pdfFile, setPdfFile] = useState(null);
+
+  useEffect(() => {
+    setPdfFile(null);
+  }, [isOpen, agenteNome]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
-    onConfirm(novoNome);
+    if (!pdfFile) return; // opcional: exige PDF
+    onConfirm(agenteNome, pdfFile); // passa só o nome antigo e o arquivo
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Editar Agente</h2>
+        <h2>Atualizar Conteúdo do Agente</h2>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={novoNome}
-            onChange={(e) => setNovoNome(e.target.value)}
-          />
-          <button className="confirm-button" type="submit">Salvar</button>
+          <label>
+            Envie um novo PDF:
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={e => setPdfFile(e.target.files[0] || null)}
+              required
+            />
+          </label>
+          <button className="confirm-button" type="submit">
+            Atualizar
+          </button>
+          <button className="close-button" type="button" onClick={onClose}>
+            Cancelar
+          </button>
         </form>
-        <button className="close-button" onClick={onClose}>Cancelar</button>
       </div>
     </div>
   );

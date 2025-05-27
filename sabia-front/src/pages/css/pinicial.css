@@ -32,7 +32,7 @@
     border-collapse: collapse;
     background: white;
     border-radius: 10px;
-    overflow: hidden;
+    /* overflow: hidden; */
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
   }
   
@@ -72,8 +72,8 @@
     }
   }
   .acao-botao {
-    background: none;
-    border: none;
+    /* background: none;
+    border: none; */
     cursor: pointer;
     font-size: 20px;
     margin: 0 5px;
@@ -107,4 +107,15 @@
 /* opcional: cursor pointer */
 .link-agente {
   cursor: pointer;
+}
+
+.acao-botao.editar {
+  background-color: #ffb300;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+.acao-botao.editar:hover {
+  background-color: #ffa000;
+  transform: scale(1.05);
 }

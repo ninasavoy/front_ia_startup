@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { listarAgentes, perguntarAgente } from '../services/api';
+import { listarAgentes, getTarefas, perguntarTarefa } from '../services/api';
 import '../pages/css/ainicial.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,126 +8,274 @@ import remarkGfm from 'remark-gfm';
 
 export default function AInicial() {
   const [agentes, setAgentes] = useState([]);
-  const [agenteSelecionado, setAgenteSelecionado] = useState('');
+  const [tarefas, setTarefas] = useState([]);
+  const [selectedAgent, setSelectedAgent] = useState('');
+  const [selectedTask, setSelectedTask] = useState(null);
   const [mensagem, setMensagem] = useState('');
   const [conversa, setConversa] = useState([]);
   const [loading, setLoading] = useState(false);
-  const chatContainerRef = useRef(null);
+  const chatRef = useRef(null);
 
-  const carregarAgentes = async () => {
-    try {
-      const resposta = await listarAgentes();
-      setAgentes(resposta.agentes || []);
-    } catch (error) {
-      console.error(error);
-      toast.error('Erro ao carregar agentes.');
-    }
-  };
+  const [userAnswers, setUserAnswers]   = useState({});    // { 0: 'a', 1: 'b', ... }
+  const [quizResults, setQuizResults]   = useState(null);  // [{ isCorrect, correctAnswer }, ...]
 
+  // 1) carrega lista de aulas (agentes)
   useEffect(() => {
-    carregarAgentes();
+    (async () => {
+      try {
+        const res = await listarAgentes();
+        setAgentes(res.agentes || []);
+      } catch (e) {
+        console.error(e);
+        toast.error('Erro ao carregar aulas.');
+      }
+    })();
   }, []);
 
+  // 2) quando escolher uma aula, busca as tarefas
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (!selectedAgent) return;
+    (async () => {
+      try {
+        const res = await getTarefas(selectedAgent);
+        setTarefas(res.tarefas || []);
+      } catch (e) {
+        console.error(e);
+        toast.error('Erro ao carregar tarefas.');
+      }
+    })();
+  }, [selectedAgent]);
+
+  // scroll automático do chat
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [conversa]);
 
-  const handleEnviarMensagem = async (e) => {
+  // envia mensagem pro chat da tarefa
+  const handleEnviar = async e => {
     e.preventDefault();
     if (!mensagem.trim()) return;
-
-    const novaConversa = [...conversa, { autor: 'usuario', texto: mensagem }];
-    setConversa(novaConversa);
+    const userMsg = { autor:'usuario', texto: mensagem };
+    setConversa(prev => [...prev, userMsg]);
     setMensagem('');
-
     try {
       setLoading(true);
-      setConversa(prev => [...prev, { autor: 'bot', texto: 'digitando...' }]); // Mensagem especial "digitando..."
-
-      const resposta = await perguntarAgente(agenteSelecionado, mensagem);
-
+      setConversa(prev => [...prev, { autor:'bot', texto:'digitando...' }]);
+      const res = await perguntarTarefa(selectedTask.id, mensagem);
       setConversa(prev => [
-        ...prev.slice(0, -1), // Remove o "digitando..."
-        { autor: 'bot', texto: resposta.resposta }
+        ...prev.slice(0,-1),
+        { autor:'bot', texto: res.resposta }
       ]);
-    } catch (error) {
-      console.error(error);
-      toast.error('Erro ao enviar pergunta.');
-      setConversa(prev => [...prev.slice(0, -1)]);
+    } catch {
+      setConversa(prev => prev.slice(0,-1));
+      toast.error('Erro no chat.');
     } finally {
       setLoading(false);
     }
   };
 
-  const voltarEscolherAgente = () => {
-    setAgenteSelecionado('');
+  // reset para escolher outra aula
+  const voltarAula = () => {
+    setSelectedAgent('');
+    setTarefas([]);
+    setSelectedTask(null);
     setConversa([]);
-    setMensagem('');
   };
 
-  if (!agenteSelecionado) {
+  // reset para escolher outra tarefa
+  const voltarTarefa = () => {
+    setSelectedTask(null);
+    setConversa([]);
+  };
+
+  // Handler quando aluno escolhe uma alternativa
+  const handleAnswerChange = (qIdx, alternativaKey) => {
+    setUserAnswers(prev => ({ ...prev, [qIdx]: alternativaKey }));
+  };
+
+  // Handler de envio das respostas do quiz
+  const handleSubmitQuiz = () => {
+    if (!selectedTask) return;
+    const results = selectedTask.perguntas.map((q, idx) => ({
+      isCorrect: userAnswers[idx] === q.resposta,
+      correctAnswer: q.resposta
+    }));
+    setQuizResults(results);
+  };
+
+  // 1) Tela de escolha de aula
+  if (!selectedAgent) {
     return (
       <div className="page-container">
-        <h1 className="page-title">Escolha um Agente</h1>
+        <h1 className="page-title">Escolha uma Aula</h1>
         <div className="agentes-lista">
-          {agentes.map((agente, index) => (
+          {agentes.map((a, i) => (
             <button
-              key={index}
+              key={i}
               className="agente-button"
-              onClick={() => setAgenteSelecionado(agente.agent_id)}
+              onClick={() => setSelectedAgent(a.agent_id)}
             >
-              {agente.agent_id}
+              {a.agent_id}
             </button>
           ))}
         </div>
-        <ToastContainer />
+        <ToastContainer position="bottom-right" autoClose={3000} />
       </div>
     );
   }
 
-  return (
-    <div className="page-container">
-      <h1 className="page-title">Conversando com {agenteSelecionado}</h1>
-      <div className="chat-container" ref={chatContainerRef}>
-        {conversa.map((msg, index) => (
-          <div
-            key={index}
-            className={`chat-balao ${msg.autor === 'usuario' ? 'usuario' : (msg.texto === 'digitando...' ? 'digitando' : 'bot')}`}
-          >
-            {msg.texto === 'digitando...' ? (
-            <div className="typing-indicator">
-                <span></span><span></span><span></span>
-            </div>
-            ) : (
-            msg.autor === 'bot' ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {msg.texto}
-                </ReactMarkdown>
-            ) : (
-                msg.texto
-            )
-            )}
-          </div>
-        ))}
-      </div>
-      <form className="chat-form" onSubmit={handleEnviarMensagem}>
-        <input
-          type="text"
-          value={mensagem}
-          onChange={(e) => setMensagem(e.target.value)}
-          placeholder="Digite sua pergunta..."
-          disabled={loading}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar'}
+  // 2) Tela de escolha de tarefa
+  if (!selectedTask) {
+    return (
+      <div className="page-container">
+        <h1 className="page-title">Tarefas de {selectedAgent}</h1>
+        <div className="agentes-lista">
+          {tarefas.map((t, i) => (
+            <button
+              key={i}
+              className="agente-button"
+              onClick={() => setSelectedTask(t)}
+            >
+              {t.tarefa_id}
+            </button>
+          ))}
+        </div>
+        <button className="voltar-button" onClick={voltarAula}>
+          ⮌ Voltar para Aulas
         </button>
-      </form>
+        <ToastContainer position="bottom-right" autoClose={3000} />
+      </div>
+    );
+  }
 
-      <button className="voltar-button" onClick={voltarEscolherAgente}>⮌ Voltar</button>
+  // 3) Tela de responder tarefa + chat
+  return (
+    <div className="page-container split">
+      {/* Coluna das Perguntas */}
+      <div className="quiz-panel">
+        <h2>Tarefa: {selectedTask.tarefa_id}</h2>
 
-      <ToastContainer />
+        {/* Score (opcional) */}
+        {quizResults && (
+          <p className="score">
+            Você acertou{' '}
+            {quizResults.filter(r => r.isCorrect).length} de{' '}
+            {quizResults.length}
+          </p>
+        )}
+
+        {selectedTask.perguntas.map((q, idx) => {
+          const result = quizResults ? quizResults[idx] : null;
+          return (
+            <div
+              key={idx}
+              className={
+                'question-block ' +
+                (result
+                  ? result.isCorrect
+                    ? 'correct'
+                    : 'incorrect'
+                  : '')
+              }
+            >
+              <p>
+                <strong>Pergunta {idx + 1}:</strong> {q.pergunta}
+              </p>
+              <ul>
+                {Object.entries(q.alternativas).map(([key, alt]) => (
+                  <li key={key}>
+                    <label>
+                      <input
+                        type="radio"
+                        name={`q${idx}`}
+                        value={key}
+                        disabled={!!quizResults}
+                        checked={userAnswers[idx] === key}
+                        onChange={() => handleAnswerChange(idx, key)}
+                      />
+                      {alt}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              {result && (
+                <div className="feedback">
+                  {result.isCorrect ? (
+                    <span className="feedback-correct">✔️ Acertou!</span>
+                  ) : (
+                    <span className="feedback-incorrect">
+                      ❌ A resposta correta é “
+                      {result.correctAnswer.toUpperCase()}”
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <button
+          className="submit-btn"
+          onClick={handleSubmitQuiz}
+          disabled={!!quizResults}
+        >
+          Enviar Respostas
+        </button>
+        <button className="voltar-button" onClick={voltarTarefa}>
+          ⮌ Voltar para Tarefas
+        </button>
+      </div>
+
+      {/* Coluna do Chat */}
+      <div className="chat-panel">
+        <h2>Chat de Dúvidas</h2>
+        <div className="chat-container" ref={chatRef}>
+          {conversa.map((m, i) => (
+            <div
+              key={i}
+              className={`chat-balao ${
+                m.autor === 'usuario'
+                  ? 'usuario'
+                  : m.texto === 'digitando...'
+                  ? 'digitando'
+                  : 'bot'
+              }`}
+            >
+              {m.texto === 'digitando...' ? (
+                <div className="typing-indicator">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+              ) : m.autor === 'bot' ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {m.texto}
+                </ReactMarkdown>
+              ) : (
+                m.texto
+              )}
+            </div>
+          ))}
+        </div>
+        <form className="chat-form" onSubmit={handleEnviar}>
+          <input
+            value={mensagem}
+            onChange={e => setMensagem(e.target.value)}
+            placeholder="Tire sua dúvida..."
+            disabled={loading}
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? 'Enviando…' : 'Enviar'}
+          </button>
+        </form>
+        <button className="voltar-button" onClick={voltarAula}>
+          ⮌ Voltar para Aulas
+        </button>
+      </div>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 }

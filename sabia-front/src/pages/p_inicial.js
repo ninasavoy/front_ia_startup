@@ -7,8 +7,9 @@ import ModalDeletarAgente from '../components/modalDeletarAgente';
 import ModalEditarAgente from '../components/modalEditarAgente';
 import { listarAgentes } from '../services/api';
 import { deletarAgente as apiDeletarAgente } from '../services/api'; // Certifique que tá importando certinho
+import { editarAgente as apiEditarAgente } from '../services/api'; // Certifique que tá importando certinho
 import './css/pinicial.css';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function PInicial() {
   const [agentes, setAgentes] = useState([]);
@@ -48,11 +49,37 @@ export default function PInicial() {
     }
   };
 
-  const editarAgente = (novoNome) => {
-    // Aqui você faria a chamada API de UPDATE
-    alert(`Agente ${agenteSelecionado} renomeado para ${novoNome}!`);
+  const editarAgente = async (nomeAntigo, pdfFile) => {
+    // 1) fecha o modal
     setModalEditarAberto(false);
-    // Depois chama carregarAgentes() de novo pra atualizar a lista
+
+    // 2) toast de loading
+    const toastId = toast.loading('Atualizando agente…');
+
+    try {
+      // 3) chama a API
+      await apiEditarAgente(nomeAntigo, pdfFile);
+
+      // 4) atualiza o toast para sucesso
+      toast.update(toastId, {
+        render: `Agente ${nomeAntigo} atualizado com sucesso!`,
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000
+      });
+
+      // 5) recarrega a lista
+      carregarAgentes();
+    } catch (err) {
+      console.error(err);
+      // 6) atualiza o toast para erro
+      toast.update(toastId, {
+        render: 'Erro ao atualizar agente.',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000
+      });
+    }
   };
 
   return (
@@ -71,7 +98,6 @@ export default function PInicial() {
             <tbody>
               {agentes.map((agente, index) => (
                 <tr key={index}>
-                  {/* 2) usa Link para navegar */}
                   <td>
                     <Link
                       to={`/tarefas/${agente.agent_id}`}
@@ -81,6 +107,12 @@ export default function PInicial() {
                     </Link>
                   </td>
                   <td>
+                    <button
+                      className="acao-botao editar"
+                      onClick={() => abrirModalEditar(agente.agent_id)}
+                    >
+                      ✏️
+                    </button>
                     <button
                       className="acao-botao excluir"
                       onClick={() => abrirModalDeletar(agente.agent_id)}
